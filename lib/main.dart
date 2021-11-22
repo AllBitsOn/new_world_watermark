@@ -1,4 +1,7 @@
+import 'dart:developer';
+
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 
 void main() => runApp(const App());
 
@@ -25,9 +28,22 @@ class HomeWidget extends StatefulWidget {
 
 class _HomeWidgetState extends State<HomeWidget> {
   int _selectedIndex = 0;
-  List<double> watermark = [0, 0, 0];
+  List<List<double>> watermark = [
+    [0, 0, 0, 0, 0, 0, 0, 0],
+    [0, 0, 0, 0, 0, 0, 0, 0],
+    [0, 0, 0, 0, 0, 0, 0, 0],
+  ];
 
-  // myicon = ImageIcon(AssetImage('assets/images/m_voidbentheavy_chest.png'));
+  List<String> images = [
+    'assets/images/m_voidbentheavy_head.png',
+    'assets/images/m_voidbentheavy_chest.png',
+    'assets/images/m_voidbentheavy_gloves.png',
+    'assets/images/m_voidbentheavy_legs.png',
+    'assets/images/m_voidbentheavy_feet.png',
+    'assets/images/corruptedamulet13.png',
+    'assets/images/corruptedearring04.png',
+    'assets/images/corruptedring25.png',
+  ];
 
   @override
   Widget build(BuildContext context) {
@@ -64,91 +80,33 @@ class _HomeWidgetState extends State<HomeWidget> {
             ],
           ),
           const VerticalDivider(thickness: 1, width: 1),
-          Expanded(
-            child: Center(
-                child: Column(
-              children: [
-                // const Spacer(flex: 2),
-                // Flexible(
-                //     flex: 2,
-                //     child: Text(
-                //       watermark[_selectedIndex].toString(),
-                //       textAlign: TextAlign.center,
-                //     )),
-                // Expanded(
-                //   child: Slider(
-                //     value: watermark[_selectedIndex],
-                //     min: 0,
-                //     max: 601,
-                //     label: watermark[_selectedIndex].toString(),
-                //     onChanged: (double value) {
-                //       setState(() {
-                //         watermark[_selectedIndex] = value.roundToDouble();
-                //       });
-                //     },
-                //   ),
-                // ),
-                Flexible(
-                    child: GridView.count(
-                  primary: false,
-                  // padding: const EdgeInsets.all(20),
-                  crossAxisSpacing: 0,
-                  mainAxisSpacing: 20,
-                  crossAxisCount: 2,
-                  children: <Widget>[
-                    Container(
-                        width: 50,
-                        padding: const EdgeInsets.all(0),
-                        child: const Image(
-                            image: AssetImage(
-                                'assets/images/m_voidbentheavy_chest.png'))),
-                    Container(
-                        width: 50,
-                        padding: const EdgeInsets.all(0),
-                        child: const Image(
-                            image: AssetImage(
-                                'assets/images/m_voidbentheavy_chest.png'))),
-                    Container(
-                        width: 50,
-                        padding: const EdgeInsets.all(0),
-                        child: const Image(
-                            image: AssetImage(
-                                'assets/images/m_voidbentheavy_chest.png'))),
-                    Container(
-                        width: 50,
-                        padding: const EdgeInsets.all(0),
-                        child: const Image(
-                            image: AssetImage(
-                                'assets/images/m_voidbentheavy_chest.png'))),
-                    Container(
-                        width: 50,
-                        padding: const EdgeInsets.all(0),
-                        child: const Image(
-                            image: AssetImage(
-                                'assets/images/m_voidbentheavy_chest.png'))),
-                    Container(
-                        width: 50,
-                        padding: const EdgeInsets.all(0),
-                        child: const Image(
-                            image: AssetImage(
-                                'assets/images/m_voidbentheavy_chest.png'))),
-                    Container(
-                        width: 50,
-                        padding: const EdgeInsets.all(0),
-                        child: const Image(
-                            image: AssetImage(
-                                'assets/images/m_voidbentheavy_chest.png'))),
-                    Container(
-                        width: 50,
-                        padding: const EdgeInsets.all(0),
-                        child: const Image(
-                            image: AssetImage(
-                                'assets/images/m_voidbentheavy_chest.png'))),
-                  ],
-                ))
-              ],
-            )),
-          )
+          Flexible(
+            child: GridView.builder(
+              itemCount: images.length,
+              gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                crossAxisCount: 2,
+                crossAxisSpacing: 5.0,
+                mainAxisSpacing: 5.0,
+              ),
+              itemBuilder: (BuildContext context, int index) {
+                return Column(children: [
+                  Image.asset(images[index]),
+                  TextFormField(
+                    controller: null,
+                    keyboardType: TextInputType.number,
+                    onChanged: (text) {
+                      log(text);
+                      // watermark[_selectedIndex][index] = double.parse(text);
+                    },
+                    inputFormatters: <TextInputFormatter>[
+                      FilteringTextInputFormatter.allow(RegExp(r'[0-9]')),
+                    ],
+                    initialValue: watermark[_selectedIndex][index].round().toString(),
+                  ),
+                ]);
+              },
+            ),
+          ),
         ],
       ),
     );
