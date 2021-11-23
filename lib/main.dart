@@ -45,68 +45,74 @@ class _HomeWidgetState extends State<HomeWidget> {
     'assets/images/corruptedring25.png',
   ];
 
+  Widget _buildNavigation() {
+    return NavigationRail(
+      selectedIconTheme: const IconThemeData(color: null),
+      unselectedIconTheme: const IconThemeData(color: null),
+      selectedIndex: _selectedIndex,
+      onDestinationSelected: (int index) {
+        setState(() {
+          _selectedIndex = index;
+        });
+      },
+      labelType: NavigationRailLabelType.selected,
+      destinations: const <NavigationRailDestination>[
+        NavigationRailDestination(
+          icon:
+              ImageIcon(AssetImage('assets/images/m_voidbentheavy_chest.png')),
+          // selectedIcon: Image(image: image),
+          label: Text('First'),
+        ),
+        NavigationRailDestination(
+          icon: Icon(Icons.bookmark_border),
+          selectedIcon: Icon(Icons.book),
+          label: Text('Second'),
+        ),
+        NavigationRailDestination(
+          icon: Icon(Icons.star_border),
+          selectedIcon: Icon(Icons.star),
+          label: Text('Third'),
+        ),
+      ],
+    );
+  }
+
+  Widget _buildGrid() {
+    return GridView.builder(
+      itemCount: images.length,
+      gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+        crossAxisCount: 2,
+        crossAxisSpacing: 5.0,
+        mainAxisSpacing: 5.0,
+      ),
+      itemBuilder: (BuildContext context, int index) {
+        return Column(children: [
+          Image.asset(images[index]),
+          TextFormField(
+            controller: null,
+            keyboardType: TextInputType.number,
+            onChanged: (text) {
+              log(text);
+              // watermark[_selectedIndex][index] = double.parse(text);
+            },
+            inputFormatters: <TextInputFormatter>[
+              FilteringTextInputFormatter.allow(RegExp(r'[0-9]')),
+            ],
+            initialValue: watermark[_selectedIndex][index].round().toString(),
+          ),
+        ]);
+      },
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       body: Row(
         children: <Widget>[
-          NavigationRail(
-            selectedIconTheme: const IconThemeData(color: null),
-            unselectedIconTheme: const IconThemeData(color: null),
-            selectedIndex: _selectedIndex,
-            onDestinationSelected: (int index) {
-              setState(() {
-                _selectedIndex = index;
-              });
-            },
-            labelType: NavigationRailLabelType.selected,
-            destinations: const <NavigationRailDestination>[
-              NavigationRailDestination(
-                icon: ImageIcon(
-                    AssetImage('assets/images/m_voidbentheavy_chest.png')),
-                // selectedIcon: Image(image: image),
-                label: Text('First'),
-              ),
-              NavigationRailDestination(
-                icon: Icon(Icons.bookmark_border),
-                selectedIcon: Icon(Icons.book),
-                label: Text('Second'),
-              ),
-              NavigationRailDestination(
-                icon: Icon(Icons.star_border),
-                selectedIcon: Icon(Icons.star),
-                label: Text('Third'),
-              ),
-            ],
-          ),
+          _buildNavigation(),
           const VerticalDivider(thickness: 1, width: 1),
-          Flexible(
-            child: GridView.builder(
-              itemCount: images.length,
-              gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                crossAxisCount: 2,
-                crossAxisSpacing: 5.0,
-                mainAxisSpacing: 5.0,
-              ),
-              itemBuilder: (BuildContext context, int index) {
-                return Column(children: [
-                  Image.asset(images[index]),
-                  TextFormField(
-                    controller: null,
-                    keyboardType: TextInputType.number,
-                    onChanged: (text) {
-                      log(text);
-                      // watermark[_selectedIndex][index] = double.parse(text);
-                    },
-                    inputFormatters: <TextInputFormatter>[
-                      FilteringTextInputFormatter.allow(RegExp(r'[0-9]')),
-                    ],
-                    initialValue: watermark[_selectedIndex][index].round().toString(),
-                  ),
-                ]);
-              },
-            ),
-          ),
+          Flexible(child: _buildGrid()),
         ],
       ),
     );
